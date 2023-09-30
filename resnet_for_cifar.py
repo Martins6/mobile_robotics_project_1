@@ -1,9 +1,6 @@
 # general data processing
 import numpy as np
 
-# data viz
-import matplotlib.pyplot as plt
-
 # utils
 import pickle
 import os
@@ -20,6 +17,7 @@ from transformers import ResNetModel
 
 # pytorch-lightning framework
 import pytorch_lightning as pl
+from pytorch_lightning.loggers import TensorBoardLogger
 
 
 class ToTensor(object):
@@ -196,5 +194,17 @@ if __name__ ==  "__main__":
 
     model = ResNetClassifier(num_class=10)
 
-    trainer = pl.Trainer(max_epochs=1, accelerator="auto", devices="auto")
+    logger = TensorBoardLogger("lightning_logs", name="ResNetClassifier")
+    trainer = pl.Trainer(
+        max_epochs=1,
+        accelerator="auto",
+        devices="auto",
+        logger=logger,
+        log_every_n_steps=10,
+        val_check_interval=0.33,
+        limit_train_batches=0.25,
+    )
+    
     trainer.fit(model=model, datamodule=dm)
+
+    trainer.test(model=model, datamodule=dm)
