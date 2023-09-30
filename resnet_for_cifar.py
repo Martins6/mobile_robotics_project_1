@@ -138,7 +138,6 @@ class ResNetClassifier(pl.LightningModule):
         self.weight_decay = weight_decay
         self.num_class = num_class
         self.model = ResNetModel.from_pretrained("microsoft/resnet-50")
-        self.model.train()
         self.flatter = nn.Flatten()
         self.fc = nn.Linear(2048, self.num_class)
         self.criterion = nn.CrossEntropyLoss()
@@ -187,7 +186,9 @@ class ResNetClassifier(pl.LightningModule):
 if __name__ ==  "__main__":
     dm = CIFAR10DataModule(
         "data/cifar-10-batches-py",
-        batch_size=30, num_workers=4, train_val_split=0.9,
+        batch_size=16,
+        num_workers=4,
+        train_val_split=0.9,
         transform=transforms.Compose([ToTensor(), ReshapeAdjust()]),
         target_transform=ToTensor()
     )

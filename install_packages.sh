@@ -14,4 +14,4 @@ if [[ "$1" == "linux" ]]; then
 fi
 
 # basic common install
-venv/bin/python -m pip install numpy pandas matplotlib seaborn jupyter lightning transformers
+venv/bin/python -m pip install numpy pandas matplotlib seaborn jupyter lightning transformers tensorboard
