@@ -6,14 +6,12 @@ fi
 
 # if on mac, install this too
 if [[ "$1" == "mac" ]]; then
-    pip install torch torchvision torchaudio
-    exit 0
+    venv/bin/python -m pip install torch torchvision torchaudio
 fi
-
 # if on linux, install this too
 if [[ "$1" == "linux" ]]; then
-    pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+    venv/bin/python -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
 fi
 
 # basic common install
-pip install numpy pandas matplotlib seaborn jupyter lightning
+venv/bin/python -m pip install numpy pandas matplotlib seaborn jupyter lightning transformers
