@@ -148,7 +148,7 @@ class ResNetClassifier(pl.LightningModule):
         The output of the model is a tensor of shape (batch_size, num_class).
 
         Args:
-            x (torch.Tensor): input tensor of shape (batch_size, 3, 224, 224)
+            x (torch.Tensor): input tensor of shape (batch_size, 3, W, H)
 
         Returns:
             torch.Tensor: output tensor of shape (batch_size, num_class)
@@ -160,22 +160,34 @@ class ResNetClassifier(pl.LightningModule):
     def training_step(self, batch, batch_idx):
         x, y = batch['x'], batch['y']
         logits = self(x)
-        loss = self.criterion(logits, y.squeeze())
+        loss = self.criterion(logits.view(-1, self.num_class), y.view(-1))
         self.log("train_loss", loss)
+        # accuracy
+        preds = torch.argmax(logits, dim=1)
+        acc = torch.sum(preds == y.view(-1)).item() / len(preds)
+        self.log("train_acc", acc)
         return loss
     
     def validation_step(self, batch, batch_idx):
         x, y = batch['x'], batch['y']
         logits = self(x)
-        loss = self.criterion(logits, y.squeeze())
+        loss = self.criterion(logits.view(-1, self.num_class), y.view(-1))
         self.log("val_loss", loss)
+        # accuracy
+        preds = torch.argmax(logits, dim=1)
+        acc = torch.sum(preds == y.view(-1)).item() / len(preds)
+        self.log("val_acc", acc)
         return loss
     
     def test_step(self, batch, batch_idx):
         x, y = batch['x'], batch['y']
         logits = self(x)
-        loss = self.criterion(logits, y.squeeze())
+        loss = self.criterion(logits.view(-1, self.num_class), y.view(-1))
         self.log("test_loss", loss)
+        # accuracy
+        preds = torch.argmax(logits, dim=1)
+        acc = torch.sum(preds == y.view(-1)).item() / len(preds)
+        self.log("test_acc", acc)
         return loss
     
     def configure_optimizers(self):
@@ -203,9 +215,9 @@ if __name__ ==  "__main__":
         logger=logger,
         log_every_n_steps=10,
         val_check_interval=0.33,
-        limit_train_batches=0.25,
+        #limit_train_batches=0.25,
     )
-    
+     
     trainer.fit(model=model, datamodule=dm)
 
     trainer.test(model=model, datamodule=dm)
