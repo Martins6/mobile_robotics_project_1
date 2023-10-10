@@ -31,7 +31,7 @@ class ReshapeAdjust(object):
             tensor
             .reshape(3, 32, 32)
         )
-        tensor = fn.resize(tensor, size=[224, 224], antialias=True)
+        tensor = fn.resize(tensor, size=[96,96], antialias=True)
         return tensor
 
 
