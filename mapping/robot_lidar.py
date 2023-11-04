@@ -145,7 +145,7 @@ def main(path_to_follow: list, robot:LiDARobot, map:Map) -> None:
 
 if __name__ == "__main__":
     print("Visualizing the map...")
-    labyrinth = pd.read_csv("labyrinth.csv")
+    labyrinth = pd.read_csv("mapping/labyrinth.csv")
     map = Map(labyrinth=labyrinth.values)
     map.print_labyrinth()
 
